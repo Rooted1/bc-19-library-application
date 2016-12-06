@@ -1,16 +1,17 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const engine = require('ejs-locals');
 
 app.set('views', path.join(__dirname, 'views'));
-app.disable('view cache');
 app.use(express.static('static'));
+app.engine('ejs', engine)
 
 app.get('/', (req, res) => {
 
         const name = "University Library";
         
-         res.render("index.ejs",  { sendNameToTemplate: name});
+         res.render("login.ejs",  { sendNameToTemplate: name});
     });
 
 app.get('/borrowed', (req, res) => {
