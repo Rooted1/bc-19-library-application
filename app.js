@@ -1,27 +1,31 @@
 const express = require('express');
-// var firebase = require('firebase');
 const path = require('path');
-const bodyParser = require('body-parser');
 const app = express();
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 app.set('views', path.join(__dirname, 'views'));
+app.disable('view cache');
+app.use(express.static('static'));
 
-app.use(express.public('public'));
+app.get('/', (req, res) => {
 
-app.get('/', (res, req) => {
-     var newPostKey = firebase.database().ref().child('posts');
+        const name = "University Library";
+        
+         res.render("index.ejs",  { sendNameToTemplate: name});
+    });
 
-  // Write the new post's data simultaneously in the posts list and the user's post list.
-  var updates = {};
-  updates.name = String;
-  updates.username = String;
-  updates.psw = String;
-  updates.psw2 = String;
-newPostKey.update(updates).then(res => console.log(res)).catch(err => console.log(err, ' there is an'));
- newPostKey.on('value',function(snapshot) {
-    console.log(snapshot.val(), 'value')
- })
+app.get('/borrowed', (req, res) => {
+        
+         res.render('borrowed.ejs');
+        
+    });
+
+app.get('/dashboard', (req, res) => {
+        const name = "Welcome to Admin Dashboard";
+        
+         res.render("dashboard.ejs",  { sendNameToTemplate: name});
+    });
+
+
+app.listen(3000, function(){
+    console.log('listening on port 3000')
 })

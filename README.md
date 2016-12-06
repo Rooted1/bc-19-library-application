@@ -1,17 +1,17 @@
 # bt-19-library-application
 ## A library application 
-A library application with user authentication support, project creation ability, task sub-categorization and task completion.
+A library application with user authentication support, book borrowing ability, book categorization and management.
 
 # Features and Overview
 
-With a library application, helps you save your todo projects and tasks as well as keeping track of them.
+With a library application, you can view available library books by categories, borrow available books, know if library has a type of book or not, and also get charged for late return of borrowed books.
 
 ## Application Features
 
-- Add and save projects
-- Save project records
-- Add tasks in project
-- Add subtasks to tasks
+- signup/login as a user
+- view books by categories
+- borrow books
+- get notifications
 
 
 ## Installation and Setup
@@ -19,7 +19,7 @@ With a library application, helps you save your todo projects and tasks as well 
 You must have NodeJS installed to use a local instance of this application.
 
 - Clone this repository.
-`git clone https://github.com/brainyfarm/bc-19-todo-list-application.git`
+`git clone https://github.com/Rooted1/bc-19-library-application.git`
 
 - Navigate to the cloned project directory
 

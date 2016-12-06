@@ -1,21 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>index</title>
+    <title>Library</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </head>
 <body>
-    <button>Add a new book</button>
-<script>
-  // Initialize Firebase
-  var firebase = require('firebase');
-  var config = {
-    apiKey: "AIzaSyCfONITbfT3fLf2miCa4ryLqdAdlr7xq7g",
-    authDomain: "library-application-d0904.firebaseapp.com",
-    databaseURL: "https://library-application-d0904.firebaseio.com",
-    storageBucket: "",
-    messagingSenderId: "121811453489"
-  };
-  firebase.initializeApp(config);
-</script>
+
+<nav class="navbar  navbar-inverse row">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Library</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+     
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" data-toggle="modal" data-target="#myModal">Sign up</a></li>
+        
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="container-fluid">
+    <div class="col-md-4 col-md-offset-4">
+    <h1>Login form</h1>
+    <form>
+      <div class="form-group">
+        <label for="email" class="control-label">Email</label>
+        <input type="text" class="form-control" id="email">
+      </div>
+      <div class="form-group">
+        <label for="password" class="control-label">Password</label>
+        <input class="form-control" id="Password" type="password"></input>
+      </div>
+      <button class="btn btn-primary pull-right">Submit</button>
+    </form>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Sign up as a new user</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+      <div class="form-group">
+        <label for="semail" class="control-label">Email</label>
+        <input type="text" class="form-control" id="semail">
+      </div>
+      <div class="form-group">
+        <label for="spassword" class="control-label">Password</label>
+        <input class="form-control" id="spassword" type="password"></input>
+      </div>
+      <div class="form-group">
+        <label for="scpassword" class="control-label">Confirm password</label>
+        <input class="form-control" id="scpassword" type="password"></input>
+      </div>
+    </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button class="btn btn-primary pull-right">Sign Up</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 </body>
+
 </html>
