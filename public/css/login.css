@@ -1,0 +1,42 @@
+body {
+   
+}
+
+body::after {
+  content: "";
+  background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2KBlyRXrxqkOolL5mHN0Fzq9WJrArDzURxrLOv5QE4jdM44yixDijVMqf');
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+#center {
+    margin: 0 auto;
+    width: 250px;
+    padding: 250px;
+}
+
+form {
+    display: block;
+    margin: 5px;
+}
+
+form input {
+    display: block;
+    padding: 5px;
+    margin: 10px;
+}
+
+.cancelbtn {
+    float: left;
+}
+
+.psw {
+    float: right;
+}

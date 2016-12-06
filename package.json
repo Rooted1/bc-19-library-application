@@ -1,0 +1,16 @@
+{
+  "name": "library-app",
+  "version": "1.0.0",
+  "description": "Andela Boot Camp Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ruth Obe",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.5.4",
+    "express": "^4.14.0",
+    "firebase": "^3.6.2"
+  }
+}

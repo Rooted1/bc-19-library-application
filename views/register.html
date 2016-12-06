@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <form action="action_page.php">
+                <div class="container">
+                        <input type="text" placeholder="Enter Name" name="name" required>
+                        <input type="text" placeholder="Enter UserId" name="name" required>
+                        <input type="password" placeholder="Create password" name="psw" required>
+                        <input type="password" placeholder="Re-enter password" name="psw" required>
+                        <button type="submit">Register</button>
+                </div>
+
+                <div class="container" style="background-color:#f1f1f1">
+                    <button type="button" class="cancelbtn">Cancel</button> 
+                </div>
+            </form>
+
+<button>Add a new book</button>
+<script>
+  // Initialize Firebase
+  var firebase = require('firebase');
+  var config = {
+    apiKey: "AIzaSyCfONITbfT3fLf2miCa4ryLqdAdlr7xq7g",
+    authDomain: "library-application-d0904.firebaseapp.com",
+    databaseURL: "https://library-application-d0904.firebaseio.com",
+    storageBucket: "",
+    messagingSenderId: "121811453489"
+  };
+  firebase.initializeApp(config);
+</script>
+</body>
+</html>
