@@ -1,9 +1,9 @@
 const express = require('express');
 session = require('express-session');
 const firebase = require('firebase');
-require('firebase/auth');
-require('firebase/database');
-const bodyParser = require('body-parser')
+    require('firebase/auth');
+    require('firebase/database');
+const bodyParser = require('body-parser');
 const path = require('path');
 const app = express();
 const engine = require('ejs-locals');
@@ -78,7 +78,6 @@ app.post('/login', (req, res) => {
             }
             req.session.user = data;
             req.session.isLoggedIn = true; 
-            console.log(data)
           res.redirect('/dashboard');
         })
         .catch(function (error) {
@@ -88,6 +87,42 @@ app.post('/login', (req, res) => {
           console.log(errorMessage);
           res.redirect('/');
         });
+});
+
+app.post('/signup', (req, res) => {
+    var email = req.body.email;
+    var password = req.body.password;
+    var confirmPassword = req.body.confirm_password;
+
+    if(password !== confirmPassword){
+        console.log('password does not match.');
+        res.redirect('/');
+    } else {
+        firebase.auth().createUserWithEmailAndPassword(email, password)
+            .then(function () {
+              firebase.auth().signInWithEmailAndPassword(email, password)
+                .then(function (user) {
+                    var data = {
+                        uid: user.uid,
+                        email: user.email
+                    }
+                    req.session.user = data;
+                    req.session.isLoggedIn = true; 
+                  res.redirect('/dashboard');
+                })
+                .catch(function (error) {
+                  // Handle Errors here.
+                  var errorMessage = error.message;
+                  req.session.destroy();
+                  console.log(errorMessage);
+                  res.redirect('/');
+                });
+            })
+            .catch(function (error) {
+              var errorMessage = error.message;
+              console.log(errorMessage);
+            });
+          }
 });
 
 app.post('/dashboard', (req, res) => {
