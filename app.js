@@ -1,7 +1,9 @@
 const express = require('express');
+session = require('express-session');
 const firebase = require('firebase');
 require('firebase/auth');
 require('firebase/database');
+const bodyParser = require('body-parser')
 const path = require('path');
 const app = express();
 const engine = require('ejs-locals');
@@ -9,6 +11,15 @@ const engine = require('ejs-locals');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('static'));
 app.engine('ejs', engine);
+app.use(bodyParser.json ());
+app.use(bodyParser.urlencoded ({
+    extended: true
+}));
+app.use(session({
+    secret: '2C44-4D44-WppQ38S',
+    resave: true,
+    saveUninitialized: true
+}));
 
   // Initialize Firebase
   var config = {
@@ -22,32 +33,41 @@ firebase.initializeApp(config);
 const database = firebase.database();
 
 app.get('/', (req, res) => {
-        const name = "University Library";
+        req.session.isLoggedIn = true;
         res.render('login.ejs');
     });
 
-app.get('/borrowed', (req, res) => {
-        var books = [];
-        const a = database.ref('books').once('value').then( (snapshot) => {
-            var data = snapshot.val()
-            books.push(data)
+app.get('/dashboard', (req, res) => {
+    console.log(req.session.isLoggedIn);
+        const promise = new Promise(function(resolve, reject){
+            database.ref('books').once('value').then( (snapshot) => {
+                var data = snapshot.val();
+                resolve(data);
+            });
         });
-         res.render("borrowed.ejs",  { books: books});
+
+        promise.then(function(books){
+            res.render("dashboard.ejs",  { books: books});
+        });
     });
 
-app.get('/dashboard', (req, res) => {
-        var books = [];
-        const a = database.ref('books').once('value').then( (snapshot) => {
-            var data = snapshot.val()
-            books.push(data)
+app.get('/borrowed', (req, res) => {
+    const promise = new Promise( (resolve, reject) => {
+        database.ref('borrowed').once('value').then ( (snapshot) => {
+            var data = snapshot.val();
+            resolve(data);
         });
-         res.render("dashboard.ejs",  { books: books});
     });
+
+    promise.then( (borrowedBook) => {
+        res.render("borrowed.ejs", { books: borrowedBook});
+    });
+});
 
 app.post('/dashboard', (req, res) => {
-
+        console.log(JSON.stringify(req.body));
+        
       var newBookDetails = new Book({ bookId: req.body.book_id, bookCategory: req.body.book_category, bookTitle: req.body.book_title, bookAuthor: req.body.book_author, qty: req.body.book_qty });
-
         newBookDetails.save((err, firstResponse) => { 
     res.redirect('/dashboard');
 });

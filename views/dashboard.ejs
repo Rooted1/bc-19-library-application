@@ -8,7 +8,7 @@
 </script>
 
     <div class="col-md-8 col-md-offset-2">
-    <div><button class="pull-right btn btn-primary" data-toggle="modal" data-target="#myModal">Add new book</button></div>
+    <div><button class="pull-right btn btn-primary" data-toggle="modal" data-target="#myModal" id="newBook">Add new book</button></div>
     <h1>List of books</h1>
     <table id="data" class="display">
     <thead>
@@ -37,7 +37,17 @@
 
         </tr> -->
         <% books.forEach(function(book) { %>
-               <tr> <td> <%-  book.book_id  %> </td> <td> <%-  book.book_category  %> </td> <td> <%-  book.book_tile  %> </td> <td> <%-  book.book_author  %> </td> <td> <%-  book.book_qty  %> </td> <td> <a href="#" title="Borrow Book"> <i class="glyphicon glyphicon-plus"> <% -%> </i> </a> <a href="#" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-pencil"> <% -%></i> </a> </td> </tr>
+            <tr> 
+              <td> <%-  book.bookID  %> </td>
+              <td> <%-  book.category  %> </td> 
+              <td> <%-  book.bookTitle  %> </td> 
+              <td> <%-  book.bookAuthor  %> </td>
+              <td> <%-  book.qty  %> </td>
+              <td> 
+                <a href="#" title="Borrow Book"> <i class="glyphicon glyphicon-plus"> <% -%> </i> </a> 
+                <a href="#" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-pencil"> <% -%></i> </a>
+              </td>
+            </tr>
            <% }) %>
     </tbody>
 </table>
@@ -49,10 +59,15 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Book Details</h4>
+        <h4 class="modal-title" id="
+        ">Book Details</h4>
       </div>
       <div class="modal-body">
-        <form>
+        <form method="post">
+        <div class="form-group">
+        <label for="bookId" class="control-label">Book ID</label>
+        <input class="form-control" id="bookId" type="text"></input>
+      </div>
       <div class="form-group">
         <label for="bookCategory" class="control-label">Book Category</label>
         <input type="text" class="form-control" id="bookCategory">
@@ -65,11 +80,15 @@
         <label for="bookAuthor" class="control-label">Book Author</label>
         <input class="form-control" id="bookAuthor" type="text"></input>
       </div>
+      <div class="form-group">
+        <label for="bookQuantity" class="control-label">Quantity</label>
+        <input class="form-control" id="bookQuantity" type="text"></input>
+      </div>
     </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      <button class="btn btn-primary pull-right">Save</button>
+      <button class="btn btn-primary pull-right">Submit</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
