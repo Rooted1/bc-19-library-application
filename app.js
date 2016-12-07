@@ -125,6 +125,11 @@ app.post('/signup', (req, res) => {
           }
 });
 
+app.get('/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('/');
+})
+
 app.post('/dashboard', (req, res) => {
         console.log(JSON.stringify(req.body));
         
