@@ -2,16 +2,16 @@
 
 <div class="col-md-4 col-md-offset-4">
   <h1>Login form</h1>
-  <form id="loginForm">
+  <form id="loginForm" action="/login" method="post">
     <div class="form-group">
       <label for="email" class="control-label">Email</label>
-      <input type="text" class="form-control" id="email" name="email">
+      <input type="text" class="form-control" id="email" name="email" required="required">
     </div>
     <div class="form-group">
       <label for="password" class="control-label">Password</label>
-      <input class="form-control" id="Password" type="password" name="password"></input>
+      <input class="form-control" id="Password" type="password" name="password" required="required"></input>
     </div>
-    <button class="btn btn-primary pull-right" id="submitBtn">Submit</button>
+    <button class="btn btn-primary pull-right" id="submitBtn">Login</button>
   </form>
 </div>
 

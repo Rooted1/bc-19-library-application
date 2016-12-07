@@ -33,12 +33,14 @@ firebase.initializeApp(config);
 const database = firebase.database();
 
 app.get('/', (req, res) => {
-        req.session.isLoggedIn = true;
+       
         res.render('login.ejs');
     });
 
 app.get('/dashboard', (req, res) => {
-    console.log(req.session.isLoggedIn);
+    if(!req.session.isLoggedIn){
+        res.redirect('/login')
+    }
         const promise = new Promise(function(resolve, reject){
             database.ref('books').once('value').then( (snapshot) => {
                 var data = snapshot.val();
@@ -62,6 +64,30 @@ app.get('/borrowed', (req, res) => {
     promise.then( (borrowedBook) => {
         res.render("borrowed.ejs", { books: borrowedBook});
     });
+});
+
+app.post('/login', (req, res) => {
+    var email = req.body.email;
+    var password = req.body.password;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+        .then(function (user) {
+            var data = {
+                uid: user.uid,
+                email: user.email
+            }
+            req.session.user = data;
+            req.session.isLoggedIn = true; 
+            console.log(data)
+          res.redirect('/dashboard');
+        })
+        .catch(function (error) {
+          // Handle Errors here.
+          var errorMessage = error.message;
+          req.session.destroy();
+          console.log(errorMessage);
+          res.redirect('/');
+        });
 });
 
 app.post('/dashboard', (req, res) => {
