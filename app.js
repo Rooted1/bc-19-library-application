@@ -33,13 +33,15 @@ firebase.initializeApp(config);
 const database = firebase.database();
 
 app.get('/', (req, res) => {
-       
-        res.render('login.ejs');
+    if(req.session.isLoggedIn){
+        res.redirect('/dashboard')
+    }
+        res.render('login.ejs', {isLoggedIn: req.session.isLoggedIn});
     });
 
 app.get('/dashboard', (req, res) => {
     if(!req.session.isLoggedIn){
-        res.redirect('/login')
+        res.redirect('/')
     }
         const promise = new Promise(function(resolve, reject){
             database.ref('books').once('value').then( (snapshot) => {
@@ -49,7 +51,7 @@ app.get('/dashboard', (req, res) => {
         });
 
         promise.then(function(books){
-            res.render("dashboard.ejs",  { books: books});
+            res.render("dashboard.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
         });
     });
 
