@@ -63,7 +63,6 @@ app.get('/admindashboard', (req, res) => {
         const promise = new Promise(function(resolve, reject){
             database.ref('books').once('value').then( (snapshot) => {
                 var data = snapshot.val();
-                console.log(data);
                 resolve(data);
             });
         });
@@ -80,7 +79,6 @@ app.get('/userdashboard', (req, res) => {
         const promise = new Promise(function(resolve, reject){
             database.ref('books').once('value').then( (snapshot) => {
                 var data = snapshot.val();
-                console.log(data);
                 resolve(data);
             });
         });
@@ -115,8 +113,12 @@ app.post('/login', (req, res) => {
                 email: user.email
             }
             req.session.user = data;
-            req.session.isLoggedIn = true; 
+            req.session.isLoggedIn = true;
+            if(data.email === 'ruthobey@gmail.com' || data.email === 'temitope.fowotade@andela.com') {
+                res.redirect('/admindashboard');
+            } else {
           res.redirect('/userdashboard');
+      }
         })
         .catch(function (error) {
           // Handle Errors here.
