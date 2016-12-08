@@ -10,10 +10,13 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "connect-flash": "^0.1.1",
     "ejs": "^2.5.4",
     "ejs-locals": "^1.0.2",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
-    "firebase": "^3.6.2"
+    "firebase": "^3.6.2",
+    "req-flash": "0.0.3",
+    "sessions": "0.0.2-7"
   }
 }

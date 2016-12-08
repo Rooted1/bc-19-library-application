@@ -1,12 +1,16 @@
 const express = require('express');
-session = require('express-session');
+const session = require('express-session');
 const firebase = require('firebase');
-    require('firebase/auth');
-    require('firebase/database');
+require('firebase/auth');
+require('firebase/database');
 const bodyParser = require('body-parser');
 const path = require('path');
-const app = express();
 const engine = require('ejs-locals');
+const flash = require('connect-flash');
+const util = require('util');
+const expressValidator = require('express-validator');
+
+const app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('static'));
@@ -20,6 +24,19 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+app.use(flash());
+
+//Global vars for messages
+app.use(function (req, res, next) {
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
+    next();
+});
+
+app.use(bodyParser.json());
+// app.use(expressValidator([options]));
 
   // Initialize Firebase
   var config = {
@@ -34,12 +51,12 @@ const database = firebase.database();
 
 app.get('/', (req, res) => {
     if(req.session.isLoggedIn){
-        res.redirect('/dashboard')
+        res.redirect('/admindashboard')
     }
         res.render('login.ejs', {isLoggedIn: req.session.isLoggedIn});
     });
 
-app.get('/dashboard', (req, res) => {
+app.get('/admindashboard', (req, res) => {
     if(!req.session.isLoggedIn){
         res.redirect('/')
     }
@@ -52,9 +69,27 @@ app.get('/dashboard', (req, res) => {
         });
 
         promise.then(function(books){
-            res.render("dashboard.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
+            res.render("admindashboard.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
         });
     });
+
+app.get('/userdashboard', (req, res) => {
+    if(!req.session.isLoggedIn){
+        res.redirect('/')
+    }
+        const promise = new Promise(function(resolve, reject){
+            database.ref('books').once('value').then( (snapshot) => {
+                var data = snapshot.val();
+                console.log(data);
+                resolve(data);
+            });
+        });
+
+        promise.then(function(books){
+            res.render("userdashboard.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
+        });
+    });
+
 
 app.get('/borrowed', (req, res) => {
     const promise = new Promise( (resolve, reject) => {
@@ -81,13 +116,14 @@ app.post('/login', (req, res) => {
             }
             req.session.user = data;
             req.session.isLoggedIn = true; 
-          res.redirect('/dashboard');
+          res.redirect('/userdashboard');
         })
         .catch(function (error) {
           // Handle Errors here.
           var errorMessage = error.message;
           req.session.destroy();
-          console.log(errorMessage);
+          console.log(errorMessage);// req.flash('success_msg', 'You have successfully input a product');
+          
           res.redirect('/');
         });
 });
@@ -111,7 +147,7 @@ app.post('/signup', (req, res) => {
                     }
                     req.session.user = data;
                     req.session.isLoggedIn = true; 
-                  res.redirect('/dashboard');
+                  res.redirect('/admindashboard');
                 })
                 .catch(function (error) {
                   // Handle Errors here.
@@ -137,15 +173,20 @@ app.post('/book', (req, res) => {
         bookAuthor: req.body.bookAuthor,
         qty: req.body.bookQuantity
     };
+    if(typeof data.bookID !== "number"){
+        console.log('pls enter  a string');
+    }
     console.log(data);
     firebase.database().ref('books').push(data);
-    res.redirect('/dashboard');
+    res.redirect('/admindashboard');
 });
 
-app.post('/borrowed', (req, res) => {
-    firebase.database.ref('borrowed').once('value').then(function(snapshot){
-        
+app.post('/borrow', (req, res) => {
+    var id = req.query.id
+    firebase.database.ref('borrowed').once('value').thend   (function(snapshot){
+
     })
+    res.redirect('/admindashboard')
 })
 
 app.get('/logout', (req, res) => {

@@ -1,0 +1,38 @@
+<% layout('layout') -%>
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('#data').DataTable();
+  });
+</script>
+
+    <div class="col-md-8 col-md-offset-2">
+    <div><a href="/borrowed"><button class="pull-right btn btn-primary" id="newBook">Borrowed Books</button></a></div>
+    <h1>List of books</h1>
+    <table id="data" class="display">
+    <thead>
+        <tr>
+            <th>Book Id</th>
+            <th>Book Category</th>
+            <th>Book Title</th>
+            <th>Book Author</th>
+            <th>Return Book</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for( key in books){  book = books[key] %>
+            <tr> 
+              <td> <%-  book.bookID  %> </td>
+              <td> <%-  book.category  %> </td> 
+              <td> <%-  book.bookTitle  %> </td> 
+              <td> <%-  book.bookAuthor  %> </td>
+              <td> 
+                <a href="#"><button  title="Borrow Book" class="btn btn-primary"> <% -%> </button></a>
+              </td>
+            </tr>
+           <% } %>
+    </tbody>
+</table>
+
+    </div>

@@ -30,8 +30,9 @@
               <td> <%-  book.bookAuthor  %> </td>
               <td> <%-  book.qty  %> </td>
               <td> 
-                <a href="#" title="Borrow Book"> <i class="glyphicon glyphicon-plus"> <% -%> </i> </a> 
-                <a href="#" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-pencil"> <% -%></i> </a>
+                <a href="/borrow" title="Borrow Book"> <i class="glyphicon glyphicon-plus"> <% -%> </i> </a>
+                <a href="/modify" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-pencil"> <% -%></i> </a>
+                <a href="/modify" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-trash"> <% -%></i> </a>
               </td>
             </tr>
            <% } %>
@@ -73,7 +74,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      <button class="btn btn-primary pull-right">Submit</button>
+      <button class="btn btn-primary pull-right">Add Book</button>
       </div>
       </form>
     </div><!-- /.modal-content -->
