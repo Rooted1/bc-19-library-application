@@ -46,6 +46,7 @@ app.get('/dashboard', (req, res) => {
         const promise = new Promise(function(resolve, reject){
             database.ref('books').once('value').then( (snapshot) => {
                 var data = snapshot.val();
+                console.log(data);
                 resolve(data);
             });
         });
@@ -64,7 +65,7 @@ app.get('/borrowed', (req, res) => {
     });
 
     promise.then( (borrowedBook) => {
-        res.render("borrowed.ejs", { books: borrowedBook});
+        res.render("borrowed.ejs", { books: borrowedBook, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
     });
 });
 
@@ -127,19 +128,31 @@ app.post('/signup', (req, res) => {
           }
 });
 
+app.post('/book', (req, res) => {
+
+    var data = {
+        bookID: req.body.bookId,
+        category: req.body.bookCategory,
+        bookTitle: req.body.bookTitle,
+        bookAuthor: req.body.bookAuthor,
+        qty: req.body.bookQuantity
+    };
+    console.log(data);
+    firebase.database().ref('books').push(data);
+    res.redirect('/dashboard');
+});
+
+app.post('/borrowed', (req, res) => {
+    firebase.database.ref('borrowed').once('value').then(function(snapshot){
+        
+    })
+})
+
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
 
-app.post('/dashboard', (req, res) => {
-        console.log(JSON.stringify(req.body));
-        
-      var newBookDetails = new Book({ bookId: req.body.book_id, bookCategory: req.body.book_category, bookTitle: req.body.book_title, bookAuthor: req.body.book_author, qty: req.body.book_qty });
-        newBookDetails.save((err, firstResponse) => { 
-    res.redirect('/dashboard');
-});
-});
 
 app.listen(3000, () => {
     console.log('listening on port 3000')
