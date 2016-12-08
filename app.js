@@ -72,7 +72,7 @@ app.get('/admindashboard', (req, res) => {
         });
     });
 
-app.get('/userdashboard', (req, res) => {
+app.get('/home', (req, res) => {
     if(!req.session.isLoggedIn){
         res.redirect('/')
     }
@@ -84,7 +84,7 @@ app.get('/userdashboard', (req, res) => {
         });
 
         promise.then(function(books){
-            res.render("userdashboard.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
+            res.render("home.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
         });
     });
 
@@ -102,6 +102,14 @@ app.get('/borrowed', (req, res) => {
     });
 });
 
+//delete a book from dashboard and database
+app.get('/delete', (req, res) => {
+    firebase.database().ref('/books/' + bookID).once('value').then(function(snapshot) {
+  var book = snapshot.val().username;
+  console.log(book);
+});
+});
+
 app.post('/login', (req, res) => {
     var email = req.body.email;
     var password = req.body.password;
@@ -117,7 +125,7 @@ app.post('/login', (req, res) => {
             if(data.email === 'ruthobey@gmail.com' || data.email === 'temitope.fowotade@andela.com') {
                 res.redirect('/admindashboard');
             } else {
-          res.redirect('/userdashboard');
+          res.redirect('/home');
       }
         })
         .catch(function (error) {
@@ -147,9 +155,11 @@ app.post('/signup', (req, res) => {
                         uid: user.uid,
                         email: user.email
                     }
+                    //push user detail into database
+                    firebase.database().ref('users').push(data);
                     req.session.user = data;
                     req.session.isLoggedIn = true; 
-                  res.redirect('/admindashboard');
+                  res.redirect('/home');
                 })
                 .catch(function (error) {
                   // Handle Errors here.
@@ -166,6 +176,7 @@ app.post('/signup', (req, res) => {
           }
 });
 
+//send books to database
 app.post('/book', (req, res) => {
 
     var data = {
@@ -178,7 +189,6 @@ app.post('/book', (req, res) => {
     if(typeof data.bookID !== "number"){
         console.log('pls enter  a string');
     }
-    console.log(data);
     firebase.database().ref('books').push(data);
     res.redirect('/admindashboard');
 });

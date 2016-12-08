@@ -18,7 +18,7 @@
             <th>Book Title</th>
             <th>Book Author</th>
             <th>Book Quantity</th>
-            <th></th>
+            <th>Delete Book</th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +30,7 @@
               <td> <%-  book.bookAuthor  %> </td>
               <td> <%-  book.qty  %> </td>
               <td> 
-                <a href="/borrow" title="Borrow Book"> <i class="glyphicon glyphicon-plus"> <% -%> </i> </a>
-                <a href="/modify" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-pencil"> <% -%></i> </a>
-                <a href="/modify" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-trash"> <% -%></i> </a>
+                <a href="/delete" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-trash"> <% -%></i> </a>
               </td>
             </tr>
            <% } %>
