@@ -20,9 +20,8 @@
         </tr>
     </thead>
     <tbody>
-      <% books.forEach(function(book) { %>
+      <% for( key in books){  book = books[key] %>
               <tr> 
-                <td> <%-  book.user  %> </td>
                 <td> <%-  book.id %> </td> 
                 <td> <%-  book.category  %> </td>
                 <td> <%-  book.title  %> </td> 
@@ -31,11 +30,12 @@
                   <a href="#" title="Return Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-trash"></i> <% -%> </i> </a> 
                 </td>
               </tr>
-             <% }) %>
+             <% } %>
     </tbody>
 </table>
 
     </div>
+    <a href="/home"><button class="btn btn-primary">Back to home</button></a>
 
 </body>
 

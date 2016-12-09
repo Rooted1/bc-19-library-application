@@ -15,6 +15,7 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('static'));
 app.engine('ejs', engine);
+app.set('view engine', 'ejs');
 app.use(bodyParser.json ());
 app.use(bodyParser.urlencoded ({
     extended: true
@@ -49,65 +50,39 @@ app.use(bodyParser.json());
 firebase.initializeApp(config);
 const database = firebase.database();
 
+const isLoggedIn = (req, res, next) => {
+    if(!req.session.isLoggedIn){
+        res.redirect('/');
+    }
+    next();
+}
+
 app.get('/', (req, res) => {
     if(req.session.isLoggedIn){
         res.redirect('/admindashboard')
     }
-        res.render('login.ejs', {isLoggedIn: req.session.isLoggedIn});
+        res.render('login', {isLoggedIn: req.session.isLoggedIn});
     });
 
-app.get('/admindashboard', (req, res) => {
-    if(!req.session.isLoggedIn){
-        res.redirect('/')
-    }
-        const promise = new Promise(function(resolve, reject){
+app.get('/admindashboard', isLoggedIn, (req, res) => {
+
             database.ref('books').once('value').then( (snapshot) => {
-                var data = snapshot.val();
-                resolve(data);
+               res.render("admindashboard",  { books: snapshot.val(), isLoggedIn: req.session.isLoggedIn, user: req.session.user});
             });
-        });
-
-        promise.then(function(books){
-            res.render("admindashboard.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
-        });
     });
 
-app.get('/home', (req, res) => {
-    if(!req.session.isLoggedIn){
-        res.redirect('/')
-    }
-        const promise = new Promise(function(resolve, reject){
+app.get('/home', isLoggedIn, (req, res) => {
             database.ref('books').once('value').then( (snapshot) => {
-                var data = snapshot.val();
-                resolve(data);
+                res.render("home",  { books: snapshot.val(), isLoggedIn: req.session.isLoggedIn, user: req.session.user});
             });
-        });
-
-        promise.then(function(books){
-            res.render("home.ejs",  { books: books, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
-        });
-    });
-
-
-app.get('/borrowed', (req, res) => {
-    const promise = new Promise( (resolve, reject) => {
-        database.ref('borrowed').once('value').then ( (snapshot) => {
-            var data = snapshot.val();
-            resolve(data);
-        });
-    });
-
-    promise.then( (borrowedBook) => {
-        res.render("borrowed.ejs", { books: borrowedBook, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
-    });
 });
 
-//delete a book from dashboard and database
-app.get('/delete/:bookID', (req, res) => {
-    var bookId = req.params.bookID;
-    firebase.database().ref().child('/books/' + bookId).remove().then((snapshot) => {
-        res.redirect('/admindashboard');
-    })
+
+app.get('/borrowed', isLoggedIn, (req, res) => {
+        database.ref('borrowed').once('value').then ( (snapshot) => {
+            var data = snapshot.val();
+            res.render("borrowed", { books: data, isLoggedIn: req.session.isLoggedIn, user: req.session.user});
+        });
 });
 
 app.post('/login', (req, res) => {
@@ -147,7 +122,7 @@ app.post('/login', (req, res) => {
           // Handle Errors here.
           var errorMessage = error.message;
           req.session.destroy();
-          console.log(errorMessage);// req.flash('success_msg', 'You have successfully input a product');
+          console.log(errorMessage);
           
           res.redirect('/');
         });
@@ -193,7 +168,7 @@ app.post('/signup', (req, res) => {
 });
 
 //send books to database
-app.post('/book', (req, res) => {
+app.post('/book', isLoggedIn, (req, res) => {
 
     var data = {
         bookID: req.body.bookId,
@@ -202,20 +177,36 @@ app.post('/book', (req, res) => {
         bookAuthor: req.body.bookAuthor,
         qty: req.body.bookQuantity
     };
-    if(typeof data.bookID !== "number"){
-        console.log('pls enter  a string');
-    }
     firebase.database().ref('books').push(data);
     res.redirect('/admindashboard');
 });
 
-app.post('/borrow', (req, res) => {
-    var id = req.query.id
-    firebase.database.ref('borrowed').once('value').then(function(snapshot){
-
+//should be a post method
+//delete a book from dashboard and database
+app.get('/delete/:bookID', isLoggedIn, (req, res) => {
+    var bookId = req.params.bookID;
+    firebase.database().ref().child('/books/' + bookId).remove().then((snapshot) => {
+        res.redirect('/admindashboard');
     })
-    res.redirect('/admindashboard')
+});
+
+app.post('/borrow/:category', (req, res) => {
+    const data  = req.body;
+    firebase.database().ref('borrowed').push(data);
+    res.redirect('/home')
+
 })
+// app.get('/borrow/:category', (req, res) => {
+//     var data = {
+//         id: req.params.id,
+//         category: req.params.category,
+//         title: req.params.title,
+//         author: req.params.author
+//     }
+//         // firebase.database().ref('borrowed').push(data);
+//         console.log(data);
+//         res.redirect('/home');
+// });
 
 app.get('/logout', (req, res) => {
     req.session.destroy();

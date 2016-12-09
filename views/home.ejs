@@ -17,7 +17,8 @@
             <th>Book Category</th>
             <th>Book Title</th>
             <th>Book Author</th>
-            <th>Return Book</th>
+            <th>Book Status</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -27,8 +28,15 @@
               <td> <%-  book.category  %> </td> 
               <td> <%-  book.bookTitle  %> </td> 
               <td> <%-  book.bookAuthor  %> </td>
-              <td> 
-                <a href="#"><button  title="Borrow Book" class="btn btn-primary"> <% -%> </button></a>
+              <td></td>
+              <td>
+                <form method="POST" action="/borrow/<%- key  %>">
+                <input name="id" type="hidden" value="<%- book.bookID %>">
+                <input name="category" type="hidden" value="<%- book.category %>">
+                <input name="title" type="hidden" value="<%- book.bookTitle %>">
+                 <input name="author" type="hidden" value="<%- book.bookAuthor %>">
+                <button  type="submit" title="Borrow Book" class="btn btn-primary"> borrow </button>
+                </form>
               </td>
             </tr>
            <% } %>
