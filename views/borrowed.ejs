@@ -11,7 +11,7 @@
     <table id="data" class="display">
     <thead>
         <tr>
-            <th>Book User</th>
+            <th>Borrower</th>
             <th>Book Id</th>
             <th>Book Category</th>
             <th>Book Title</th>
@@ -22,6 +22,7 @@
     <tbody>
       <% for( key in books){  book = books[key] %>
               <tr> 
+              <td> <%-  book.email  %> </td>
                 <td> <%-  book.id %> </td> 
                 <td> <%-  book.category  %> </td>
                 <td> <%-  book.title  %> </td> 

@@ -9,6 +9,7 @@
 
     <div class="col-md-8 col-md-offset-2">
     <div><button class="pull-right btn btn-primary" data-toggle="modal" data-target="#myModal" id="newBook">Add new book</button></div>
+    <div><a href="/borrowed"><button class="pull-right btn btn-primary" >Books borrowed</button></a></div>
     <h1>List of books</h1>
     <table id="data" class="display">
     <thead>
@@ -30,7 +31,9 @@
               <td> <%-  book.bookAuthor  %> </td>
               <td> <%-  book.qty  %> </td>
               <td> 
-                <a href="/delete/<%- key  %>" title="Modify Book" style="margin-left: 10px"> <i class="glyphicon glyphicon-trash trash"></i> </a>
+                <form method="POST" action="/delete/<%- key  %>">
+                <button type="submit" class="btn btn-primary" title="delete book"><i class="glyphicon glyphicon-trash trash"></i></button>
+                </form>
               </td>
             </tr>
            <% } %>

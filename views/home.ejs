@@ -10,16 +10,14 @@
     <div class="col-md-8 col-md-offset-2">
     <div><a href="/borrowed"><button class="pull-right btn btn-primary" id="newBook">Borrowed Books</button></a></div>
     <h1>List of books</h1>
-    <table id="data" class="display">
+    <table id="data" class="display table table-striped">
     <thead>
-        <tr>
             <th>Book Id</th>
             <th>Book Category</th>
             <th>Book Title</th>
             <th>Book Author</th>
-            <th>Book Status</th>
+            <th>Availability</th>
             <th>Action</th>
-        </tr>
     </thead>
     <tbody>
         <% for( key in books){  book = books[key] %>
@@ -28,14 +26,15 @@
               <td> <%-  book.category  %> </td> 
               <td> <%-  book.bookTitle  %> </td> 
               <td> <%-  book.bookAuthor  %> </td>
-              <td></td>
+              <td> <%-  book.qty.length > 0? "Yes":"No"  %> </td>
               <td>
                 <form method="POST" action="/borrow/<%- key  %>">
                 <input name="id" type="hidden" value="<%- book.bookID %>">
                 <input name="category" type="hidden" value="<%- book.category %>">
                 <input name="title" type="hidden" value="<%- book.bookTitle %>">
                  <input name="author" type="hidden" value="<%- book.bookAuthor %>">
-                <button  type="submit" title="Borrow Book" class="btn btn-primary"> borrow </button>
+                 <input name="qty" type="hidden" value="<%-  book.qty.length > 0? 'Yes':'No'  %>">
+                <button  type="submit" title="Borrow Book" class="btn btn-primary btn-xs" id="<%- key %>"> borrow </button>
                 </form>
               </td>
             </tr>

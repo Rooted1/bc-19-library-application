@@ -141,6 +141,7 @@ app.post('/signup', (req, res) => {
             .then(function (user) {
                 firebase.database().ref('users/' + user.uid).set({
                     role: 'subscriber',
+                    email: user.email
                 });
               firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function (user) {
@@ -181,9 +182,8 @@ app.post('/book', isLoggedIn, (req, res) => {
     res.redirect('/admindashboard');
 });
 
-//should be a post method
 //delete a book from dashboard and database
-app.get('/delete/:bookID', isLoggedIn, (req, res) => {
+app.post('/delete/:bookID', isLoggedIn, (req, res) => {
     var bookId = req.params.bookID;
     firebase.database().ref().child('/books/' + bookId).remove().then((snapshot) => {
         res.redirect('/admindashboard');
@@ -191,27 +191,24 @@ app.get('/delete/:bookID', isLoggedIn, (req, res) => {
 });
 
 app.post('/borrow/:category', (req, res) => {
-    const data  = req.body;
-    firebase.database().ref('borrowed').push(data);
-    res.redirect('/home')
 
-})
-// app.get('/borrow/:category', (req, res) => {
-//     var data = {
-//         id: req.params.id,
-//         category: req.params.category,
-//         title: req.params.title,
-//         author: req.params.author
-//     }
-//         // firebase.database().ref('borrowed').push(data);
-//         console.log(data);
-//         res.redirect('/home');
-// });
+    const data  = req.body;
+    data.email = req.session.user.email;
+    firebase.database().ref('borrowed').push(data);
+    res.redirect('/home');
+
+});
+
+app.post('/return/:id', (req, res) => {
+    var data = req.params.bookID;
+    firebase.database().ref('books').push(data);
+    res.redirect('/borrowed');
+});
 
 app.get('/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
-})
+});
 
 
 app.listen(3000, () => {
