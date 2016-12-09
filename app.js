@@ -103,11 +103,11 @@ app.get('/borrowed', (req, res) => {
 });
 
 //delete a book from dashboard and database
-app.get('/delete', (req, res) => {
-    firebase.database().ref('/books/' + bookID).once('value').then(function(snapshot) {
-  var book = snapshot.val().username;
-  console.log(book);
-});
+app.get('/delete/:bookID', (req, res) => {
+    var bookId = req.params.bookID;
+    firebase.database().ref().child('/books/' + bookId).remove().then((snapshot) => {
+        res.redirect('/admindashboard');
+    })
 });
 
 app.post('/login', (req, res) => {
@@ -116,17 +116,32 @@ app.post('/login', (req, res) => {
 
     firebase.auth().signInWithEmailAndPassword(email, password)
         .then(function (user) {
-            var data = {
-                uid: user.uid,
-                email: user.email
-            }
-            req.session.user = data;
-            req.session.isLoggedIn = true;
-            if(data.email === 'ruthobey@gmail.com' || data.email === 'temitope.fowotade@andela.com') {
-                res.redirect('/admindashboard');
-            } else {
-          res.redirect('/home');
-      }
+            firebase.database().ref('users/' + user.uid).once('value').then((snapshot) => {
+                var data = snapshot.val();
+                if(data){
+                var userData = {
+                    uid: user.uid,
+                    email: user.email,
+                    role: data.role
+                }
+                req.session.user = userData;
+                req.session.isLoggedIn = true;
+                if(data.role === 'subscriber') {
+                    res.redirect('/home');
+                } else {
+                    res.redirect('/admindashboard');
+                 }
+             } else{
+                res.redirect('/');
+                q
+             }
+            }).catch(function(error){
+                var errorMessage = error.message;
+                req.session.destroy();
+                console.log(errorMessage);
+                res.redirect('/');
+            })
+            
         })
         .catch(function (error) {
           // Handle Errors here.
@@ -148,15 +163,16 @@ app.post('/signup', (req, res) => {
         res.redirect('/');
     } else {
         firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(function () {
+            .then(function (user) {
+                firebase.database().ref('users/' + user.uid).set({
+                    role: 'subscriber',
+                });
               firebase.auth().signInWithEmailAndPassword(email, password)
                 .then(function (user) {
                     var data = {
                         uid: user.uid,
                         email: user.email
                     }
-                    //push user detail into database
-                    firebase.database().ref('users').push(data);
                     req.session.user = data;
                     req.session.isLoggedIn = true; 
                   res.redirect('/home');
@@ -195,7 +211,7 @@ app.post('/book', (req, res) => {
 
 app.post('/borrow', (req, res) => {
     var id = req.query.id
-    firebase.database.ref('borrowed').once('value').thend   (function(snapshot){
+    firebase.database.ref('borrowed').once('value').then(function(snapshot){
 
     })
     res.redirect('/admindashboard')
