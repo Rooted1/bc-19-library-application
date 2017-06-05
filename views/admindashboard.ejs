@@ -1,0 +1,83 @@
+<% layout('layout') -%>
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('#data').DataTable();
+  });
+</script>
+
+    <div class="col-md-8 col-md-offset-2">
+    <div><button class="pull-right btn btn-primary" data-toggle="modal" data-target="#myModal" id="newBook">Add new book</button></div>
+    <div><a href="/adminview"><button class="pull-right btn btn-primary" >Books borrowed</button></a></div>
+    <h1>List of books</h1>
+    <table id="data" class="display">
+    <thead>
+        <tr>
+            <th>Book Id</th>
+            <th>Book Category</th>
+            <th>Book Title</th>
+            <th>Book Author</th>
+            <th>Book Quantity</th>
+            <th>Delete Book</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for( key in books){  book = books[key] %>
+            <tr> 
+              <td> <%-  book.bookID  %> </td>
+              <td> <%-  book.category  %> </td> 
+              <td> <%-  book.bookTitle  %> </td> 
+              <td> <%-  book.bookAuthor  %> </td>
+              <td> <%-  book.qty  %> </td>
+              <td> 
+                <form method="POST" action="/delete/<%- key  %>">
+                <button type="submit" class="btn btn-primary" title="delete book"><i class="glyphicon glyphicon-trash trash"></i></button>
+                </form>
+              </td>
+            </tr>
+           <% } %>
+    </tbody>
+</table>
+
+    </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <form method="post" action="/book">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="
+        ">Book Details</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+        <label for="bookId" class="control-label">Book ID</label>
+        <input class="form-control" id="bookId" name="bookId" type="text" required="required"></input>
+      </div>
+      <div class="form-group">
+        <label for="bookCategory" class="control-label">Book Category</label>
+        <input type="text" class="form-control" name="bookCategory" id="bookCategory" required="required">
+      </div>
+      <div class="form-group">
+        <label for="bookTitle" class="control-label">Book Title</label>
+        <input class="form-control" id="bookTitle" name="bookTitle" type="text" required="required"></input>
+      </div>
+      <div class="form-group">
+        <label for="bookAuthor" class="control-label">Book Author</label>
+        <input class="form-control" id="bookAuthor" name="bookAuthor" type="text" required="required"></input>
+      </div>
+      <div class="form-group">
+        <label for="bookQuantity" class="control-label">Quantity</label>
+        <input class="form-control" id="bookQuantity" name="bookQuantity" type="text" required="required"></input>
+      </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button class="btn btn-primary pull-right">Add Book</button>
+      </div>
+      </form>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

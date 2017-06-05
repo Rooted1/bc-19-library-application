@@ -1,0 +1,45 @@
+<% layout('layout') -%>
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+      $('#data').DataTable();
+  });
+</script>
+
+    <div class="col-md-8 col-md-offset-2">
+    <div><a href="/borrowed"><button class="pull-right btn btn-primary" id="newBook">Borrowed Books</button></a></div>
+    <h1>List of books</h1>
+    <table id="data" class="display table table-striped">
+    <thead>
+            <th>Book Id</th>
+            <th>Book Category</th>
+            <th>Book Title</th>
+            <th>Book Author</th>
+            <th>Availability</th>
+            <th>Action</th>
+    </thead>
+    <tbody>
+        <% for( key in books){  book = books[key] %>
+            <tr> 
+              <td> <%-  book.bookID  %> </td>
+              <td> <%-  book.category  %> </td> 
+              <td> <%-  book.bookTitle  %> </td> 
+              <td> <%-  book.bookAuthor  %> </td>
+              <td> <%-  book.qty.length > 0? "Yes":"No"  %> </td>
+              <td>
+                <form method="POST" action="/borrow/<%- key  %>">
+                <input name="id" type="hidden" value="<%- book.bookID %>">
+                <input name="category" type="hidden" value="<%- book.category %>">
+                <input name="title" type="hidden" value="<%- book.bookTitle %>">
+                 <input name="author" type="hidden" value="<%- book.bookAuthor %>">
+                 <input name="qty" type="hidden" value="<%-  book.qty.length > 0? 'Yes':'No'  %>">
+                <button  type="submit" title="Borrow Book" class="btn btn-primary btn-xs" id="<%- key %>"> borrow </button>
+                </form>
+              </td>
+            </tr>
+           <% } %>
+    </tbody>
+</table>
+
+    </div>
