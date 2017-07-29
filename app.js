@@ -9,7 +9,6 @@ const engine = require('ejs-locals');
 const flash = require('req-flash');
 const util = require('util');
 require ('dotenv') .config();
-const request = express.request;
 
 const app = express();
 
@@ -68,7 +67,7 @@ app.post('/subscribe', function(req, res) {
 });
 
 function addEmailToMailchimp (email) {
-    // var request = require("request");
+    var request = require("request");
 
     var options = { method: 'POST',
       url: 'https://us16.api.mailchimp.com/3.0/lists/719b7726e2/members',
