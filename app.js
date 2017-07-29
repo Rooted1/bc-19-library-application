@@ -6,9 +6,10 @@ require('firebase/database');
 const bodyParser = require('body-parser');
 const path = require('path');
 const engine = require('ejs-locals');
-const flash = require('connect-flash');
+const flash = require('req-flash');
 const util = require('util');
 require ('dotenv') .config();
+const request = express.request;
 
 const app = express();
 
@@ -50,12 +51,42 @@ app.use(bodyParser.json());
 firebase.initializeApp(config);
 const database = firebase.database();
 
-// const isLoggedIn = (req, res, next) => {
-//     if(!req.session.isLoggedIn){
-//         res.redirect('/');
-//     }
-//     next();
-// }
+const isLoggedIn = (req, res, next) => {
+    if(!req.session.isLoggedIn){
+        res.redirect('/');
+    }
+    next();
+}
+
+//testing mailchimp api
+app.get('/subscribe', (req, res) => {
+    res.render('subscribe');
+});
+app.post('/subscribe', function(req, res) {
+    addEmailToMailchimp(req.body.email)
+    res.end('Yay! You\'ve just subscried to our monthly newsletter');
+});
+
+function addEmailToMailchimp (email) {
+    // var request = require("request");
+
+    var options = { method: 'POST',
+      url: 'https://us16.api.mailchimp.com/3.0/lists/719b7726e2/members',
+      headers: 
+       { 'postman-token': '96eca650-8a99-140c-6467-a85df34d23eb',
+         'cache-control': 'no-cache',
+         authorization: 'Basic YXN0cmluZzplMmMyMDc4YWJjOGJhMGQ4MjU4YjAwYzg5NWI2NjJhNC11czE2',
+         'content-type': 'application/json' },
+      body: { email_address: email, status: 'subscribed' },
+      json: true };
+
+    request(options, function (error, response, body) {
+      if (error) throw new Error(error);
+
+      console.log(body);
+});
+
+}
 
 app.get('/', (req, res) => {
     // if(req.session.isLoggedIn){
@@ -63,6 +94,10 @@ app.get('/', (req, res) => {
     // }
         res.render('login');
     });
+
+app.get('/login', (req, res) => {
+    res.render('login');
+});
 
 app.get('/admindashboard', (req, res) => {
 
@@ -79,7 +114,7 @@ app.get('/home', (req, res) => {
 
 
 app.get('/borrowed', (req, res) => {
-        database.ref('borrowed').once('value').then ( (snapshot) => {
+        database.ref('borrowed').once('value').then( (snapshot) => {
             var data = snapshot.val();
             res.render("borrowed", { books: data, user: req.session.user});
         });
@@ -112,7 +147,7 @@ app.post('/login', (req, res) => {
                     if(data.role) {
                         res.redirect('/home');
                     } else {
-                        res.redirect('/admindashboard');
+                        res.redirect('/login');
                      }
                  } else {
                     res.redirect('/admindashboard');
@@ -141,7 +176,7 @@ app.post('/signup', (req, res) => {
     var confirmPassword = req.body.confirm_password;
 
     if(password !== confirmPassword){
-        console.log('password does not match.');
+        alert('password does not match.');
         res.redirect('/');
     } else {
         firebase.auth().createUserWithEmailAndPassword(email, password)

@@ -1,0 +1,13 @@
+<% layout('layout') -%>
+
+<div class="col-md-4 col-md-offset-4">
+  <h1>Subscribe for our Monthly Newsletter here...</h1>
+  <form id="subscriptionForm" action="/subscribe" method="post">
+    <div class="form-group">
+      <label for="email" class="control-label">Email</label>
+      <input type="text" class="form-control" id="newsletterEmail" name="email" required="required">
+    </div>
+    
+    <button class="btn btn-primary pull-right" id="submitSubscription">Submit</button>
+  </form>
+</div>
